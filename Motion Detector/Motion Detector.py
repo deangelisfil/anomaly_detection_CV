@@ -2,10 +2,15 @@ import cv2
 import numpy as np
 import imutils
 
+# We follow the approach in
+# https://www.pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/
+
 # Parameters
 resizeCoef = 3
 vsPath = "../Resources/sorpasso.mp4"
 backgroundPath = "../Resources/background.jpg"
+minAreaContour = 800
+minBackgroundDiff = 125
 
 # utility functions
 def resizeFrame(im, resizeCoef):
@@ -30,15 +35,25 @@ while True:
     if background is None:
         background = frameG
 
+    frameDelta = cv2.absdiff(background, frameG)
+    frameThresh = cv2.threshold(frameDelta, minBackgroundDiff, 255, cv2.THRESH_BINARY)[1]
+
+    frameThresh = cv2.dilate(frameThresh, None, iterations=2)
+    cnts = cv2.findContours(frameThresh.copy(), cv2.RETR_EXTERNAL,
+                            cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+
+    for c in cnts:
+        if cv2.contourArea(c) > minAreaContour:
+            # compute the bounding box for the contour, draw it on the frame
+            (x, y, w, h) = cv2.boundingRect(c)
+            cv2.rectangle(frameG, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
     if frame is None or (cv2.waitKey(1) & 0xFF == ord("q")):
         break
 
-    # assume first frame is the background
-    frameDelta = cv2.absdiff(background, frameG)
-    frameDelta = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
-
-    cv2.imshow("Video", frameDelta)
+    cv2.imshow("frameG", frameG)
+    cv2.imshow("frameDelta", frameDelta)
+    cv2.imshow("frameThresh", frameThresh)
 
 
-    # next step is following the code/ approach in
-    # https://www.pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/
