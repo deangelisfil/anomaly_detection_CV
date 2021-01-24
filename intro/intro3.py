@@ -1,7 +1,7 @@
 import cv2
-import numpy as np
+from parameters import *
 
-img = cv2.imread("../Resources/Machiavelli.jpg")
+img = cv2.imread(str(pathImage))
 print(img.shape)
 
 imgResize = cv2.resize(img, (622,800)) # width first, then height

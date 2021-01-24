@@ -13,7 +13,8 @@ if vsPath == "":
     # set computer camera as video stream
     vs = cv2.VideoCapture(0)
 else:
-    vs = cv2.VideoCapture(vsPath)
+    vs = cv2.VideoCapture(str(vsPath))
+    print(vsPath)
 
 if backgroundPath == "":
     # if no background, use first frame as background
@@ -21,7 +22,8 @@ if backgroundPath == "":
     frameG = resizeFrame(frame, resizeCoef)
     background = frameG
 else:
-    background = cv2.imread(backgroundPath)
+    background = cv2.imread(str(backgroundPath))
+    print(backgroundPath)
     background = resizeFrame(background, resizeCoef)
 
 fps = vs.get(cv2.CAP_PROP_FPS)

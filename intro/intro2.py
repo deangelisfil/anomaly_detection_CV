@@ -1,7 +1,10 @@
 import cv2
 import numpy as np
+from parameters import *
 
-img = cv2.imread("../Resources/Machiavelli.jpg")
+print(os.getcwd())
+img = cv2.imread(str(pathImage))
+print(pathImage)
 cv2.imshow("Output", img)
 
 # convert to grey scale
