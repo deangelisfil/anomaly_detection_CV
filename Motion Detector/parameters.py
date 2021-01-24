@@ -3,10 +3,11 @@ from pathlib import Path
 
 cwd = Path(os.getcwd())
 relPathVideo = "Resources/sorpasso.mp4"
-vsPath = cwd.parent / relPathVideo
+# vsPath = cwd.parent / relPathVideo
+vsPath = ""
 relPathBackground = "Resources/background.jpg"
-# backgroundPath = ""
-backgroundPath = cwd.parent / relPathBackground
+# backgroundPath = cwd.parent / relPathBackground
+backgroundPath = 60
 
 resizeCoef = 3
 outPath = "output.avi"

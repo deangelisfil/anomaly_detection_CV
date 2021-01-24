@@ -14,16 +14,18 @@ if vsPath == "":
     vs = cv2.VideoCapture(0)
 else:
     vs = cv2.VideoCapture(str(vsPath))
-    print(vsPath)
 
-if backgroundPath == "":
-    # if no background, use first frame as background
-    success, frame = vs.read()
-    frameG = resizeFrame(frame, resizeCoef)
-    background = frameG
+backgroundStock = [] # backgroundStock contains all the background images used in the future
+if type(backgroundPath) == int:
+    # if no background, use the xth frame as background where x = backgroundPath
+    for i in range(backgroundPath):
+        success, background = vs.read()
+        background = resizeFrame(background, resizeCoef)
+        backgroundStock.append(background)
+    background = backgroundStock[0]
+
 else:
     background = cv2.imread(str(backgroundPath))
-    print(backgroundPath)
     background = resizeFrame(background, resizeCoef)
 
 fps = vs.get(cv2.CAP_PROP_FPS)
@@ -59,6 +61,13 @@ while vs.isOpened():
     cv2.imshow("frameG", frameG)
     cv2.imshow("frameDelta", frameDelta)
     cv2.imshow("frameThresh", frameThresh)
+    cv2.imshow("background", background)
+
+    if backgroundStock != []:
+        # update background
+        backgroundStock.pop(0)
+        backgroundStock.append(frameG)
+        background = backgroundStock[0]
 
 vs.release()
 cv2.destroyAllWindows()
